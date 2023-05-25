@@ -37,5 +37,6 @@ module.exports = {
     radix: 'off',
     'react-hooks/exhaustive-deps': 'off',
     'react-hooks/rules-of-hooks': 'off',
+    'import/no-extraneous-dependencies'
   },
 };

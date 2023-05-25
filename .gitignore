@@ -142,3 +142,5 @@ random.json
 
 #vscode
 .vscode
+
+package-lock.json
