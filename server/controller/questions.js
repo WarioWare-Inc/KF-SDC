@@ -1,121 +1,84 @@
 const axios = require('axios');
+const questions = require('../models/questions');
+
+const {
+  getQuestionsDB,
+  addQuestionDB,
+  addAnswerDB,
+  markHelpfulQuestionDB,
+  markHelpfulAnswerDB,
+  reportAnswerDB
+} = questions;
 
 module.exports = {
   getQuestions(req, res) {
-    const endpoint = 'https://app-hrsei-api.herokuapp.com/api/fec2/hr-rfp/qa/questions';
-    const option = {
-      method: 'GET',
-      url: endpoint,
-      headers: {
-        Authorization: process.env.AUTH,
-      },
-      params: req.query,
-    };
-    return axios(option)
-      .then((result) => {
-        res.status(200).send(result.data);
-      })
-      .catch((err) => {
+      getQuestionsDB(req.query, (err, result) => {
+      if (err) {
         console.log(err);
         res.status(400).send();
-      });
+      } else {
+        res.status(200).send(Object.assign({product_id: req.query.product_id}, result))
+      }
+    });
   },
 
   addQuestion(req, res) {
-    const endpoint = 'https://app-hrsei-api.herokuapp.com/api/fec2/hr-rfp/qa/questions';
-    const option = {
-      method: 'POST',
-      url: endpoint,
-      headers: {
-        Authorization: process.env.AUTH,
-      },
-      data: req.body,
-    };
-    return axios(option)
-      .then((result) => {
-        res.status(200).end('Question Added');
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(400).send();
+      addQuestionDB(req.body, (err, result) => {
+        if (err) {
+          console.log(err);
+          res.status(400).send();
+        } else {
+          console.log('>>>>>', result);
+          res.status(201).send('CREATED');
+        }
       });
   },
 
   addAnswer(req, res) {
-    const endpoint = `https://app-hrsei-api.herokuapp.com/api/fec2/hr-rfp/qa/questions/${req.body.question_id}/answers`;
-    console.log(req.body.body)
-    const option = {
-      method: 'POST',
-      url: endpoint,
-      headers: {
-        Authorization: process.env.AUTH,
-      },
-      data: req.body.body,
-    }
-    return axios(option)
-      .then((result) => {
-        res.status(200).end('Answer Added');
-      })
-      .catch((err) => {
-        console.log('this is server err:', err);
+    addAnswerDB(req.body, (err, result) => {
+      if (err) {
+        console.log(err);
         res.status(400).send();
-      });
+      } else {
+        console.log('>>>>>', result);
+        res.status(201).send('CREATED');
+      }
+    });
   },
 
   markHelpfulQuestion(req, res) {
-    const endpoint = `https://app-hrsei-api.herokuapp.com/api/fec2/hr-rfp/qa/questions/${req.body.question_id}/helpful`;
-    const option = {
-      method: 'PUT',
-      url: endpoint,
-      headers: {
-        Authorization: process.env.AUTH,
-      },
-    }
-    return axios(option)
-      .then((result) => {
-        res.status(200).end('Marked Helpful');
-      })
-      .catch((err) => {
+    markHelpfulQuestionDB(req.body, (err, result) => {
+      if (err) {
         console.log(err);
         res.status(400).send();
-      });
+      } else {
+        console.log('>>>>>', result);
+        res.status(204).send('NO CONTENT');
+      }
+    });
   },
 
   markHelpfulAnswer(req, res) {
-    const endpoint = `https://app-hrsei-api.herokuapp.com/api/fec2/hr-rfp/qa/answers/${req.body.answer_id}/helpful`;
-    const option = {
-      method: 'PUT',
-      url: endpoint,
-      headers: {
-        Authorization: process.env.AUTH,
-      },
-    }
-    return axios(option)
-      .then((result) => {
-        res.status(200).end('Answer Helpful');
-      })
-      .catch((err) => {
+    markHelpfulAnswerDB(req.body, (err, result) => {
+      if (err) {
         console.log(err);
         res.status(400).send();
-      });
+      } else {
+        console.log('>>>>>', result);
+        res.status(204).send('NO CONTENT');
+      }
+    });
   },
 
   reportAnswer(req, res) {
-    const endpoint = `https://app-hrsei-api.herokuapp.com/api/fec2/hr-rfp/qa/answers/${req.body.answer_id}/report`;
-    const option = {
-      method: 'PUT',
-      url: endpoint,
-      headers: {
-        Authorization: process.env.AUTH,
-      },
-    }
-    return axios(option)
-      .then((result) => {
-        res.status(200).end('Answer reported');
-      })
-      .catch((err) => {
+    reportAnswerDB(req.body, (err, result) => {
+      if (err) {
         console.log(err);
         res.status(400).send();
-      });
+      } else {
+        console.log('>>>>>', result);
+        res.status(204).send('NO CONTENT');
+      }
+    });
   },
 }
