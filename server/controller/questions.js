@@ -1,4 +1,3 @@
-const axios = require('axios');
 const questions = require('../models/questions');
 
 const {
@@ -12,6 +11,7 @@ const {
 
 module.exports = {
   getQuestions(req, res) {
+    console.log('=========================>', req.url);
       getQuestionsDB(req.query, (err, result) => {
       if (err) {
         console.log(err);

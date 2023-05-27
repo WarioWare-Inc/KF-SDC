@@ -3,6 +3,7 @@ require('dotenv').config();
 const morgan = require('morgan');
 const cors = require('cors');
 const express = require('express');
+const compression = require('compression');
 const path = require('path');
 
 const app = express();
@@ -20,6 +21,9 @@ app.use(express.urlencoded({ extended: false }));
 // middleware
 app.use(morgan('tiny'));
 app.use(cors());
+app.use(compression({
+  threshold: 0
+}));
 
 // Add a middleware to log HTTP requests
 app.use(logger);
@@ -53,5 +57,7 @@ app.put('/qa/answers/:answer_id/report', controller.questions.reportAnswer);
 
 /* ---------------- Server listens ---------------- */
 
-app.listen(process.env.PORT || 3000);
+const server = app.listen(process.env.PORT || 3000);
 console.log(`Listening at http://localhost:${process.env.PORT || 3000}`);
+
+module.exports = server;
