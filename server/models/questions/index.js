@@ -12,77 +12,79 @@ module.exports = {
       `select coalesce(json_agg(question), '{}'::json) as results
       from (
         select
-          questions.question_id,
-          questions.body as question_body,
-          questions.date_written as question_date,
-          questions.asker_name,
-          questions.helpfulness as question_helpfulness,
-          questions.reported,
-          questions.product_id,
-          (
-            select coalesce(json_object_agg(nested_answer.id, nested_answer), '{}'::json)
-            from (
+        questions.question_id,
+        questions.body as question_body,
+        questions.date_written as question_date,
+        questions.asker_name,
+        questions.helpfulness as question_helpfulness,
+        questions.reported,
+        questions.product_id,
+        (
+          select coalesce(json_object_agg(nested_answer.id, nested_answer), '{}'::json)
+          from (
+            select
+            answers.answerer_id as id,
+            answers.body,
+            answers.date_written as date,
+            answers.answerer_name,
+            answers.helpfulness,
+            (
+              select coalesce(json_agg(nested_photo), '[]'::json) as photos
+              from (
                 select
-                  answers.answerer_id as id,
-                  answers.body,
-                  answers.date_written as date,
-                  answers.answerer_name,
-                  answers.helpfulness,
-                  (
-                    select coalesce(json_agg(nested_photo), '[]'::json) as photos
-                    from (
-                      select
-                        photos.photo_id as id,
-                        photos.url,
-                        photos.answerer_id
-                      from photos
-                      where photos.answerer_id = answers.answerer_id
-                    ) as nested_photo
-                  )
-                from answers
-                where answers.question_id = questions.question_id and answers.reported = false
-              ) as nested_answer
-          ) as answers
+                photos.photo_id as id,
+                photos.url,
+                photos.answerer_id
+                from photos
+                where photos.answerer_id = answers.answerer_id
+              ) as nested_photo
+            )
+            from answers
+            where answers.question_id = questions.question_id and answers.reported = false
+          ) as nested_answer
+        ) as answers
         from questions
       ) as question
       where question.product_id = $1
       limit $2;`,
-       [params.product_id, params.count])
+      [params.product_id, params.count])
       .then((result) => {
         callback(null, result.rows[0]);
-        })
+      })
       .catch((err) => {
         callback(err, null);
       });
   },
   getAnswersDB(params, callback) {
     client.query(
-      `select coalesce(json_object_agg(nested_answer.id, nested_answer), '{}'::json)
-			from (
-					select
-						answers.answerer_id as id,
-						answers.body,
-						answers.date_written as date,
-						answers.answerer_name,
-						answers.helpfulness,
-						(
-							select coalesce(json_agg(nested_photo), '[]'::json) as photos
-							from (
-								select
-									photos.photo_id as id,
-									photos.url,
-									photos.answerer_id
-								from photos
-								where photos.answerer_id = answers.answerer_id
-							) as nested_photo
-						)
-					from answers
-					where answers.question_id = $1 and answers.reported = false
-				) as nested_answer
-      limit $2`, [params.question_id, params.count])
+    `select coalesce(json_object_agg(nested_answer.id, nested_answer), '{}'::json)
+      from
+      (
+        select
+        answers.answerer_id as id,
+        answers.body,
+        answers.date_written as date,
+        answers.answerer_name,
+        answers.helpfulness,
+        (
+          select coalesce(json_agg(nested_photo), '[]'::json) as photos
+          from
+          (
+            select
+            photos.photo_id as id,
+            photos.url,
+            photos.answerer_id
+            from photos
+            where photos.answerer_id = answers.answerer_id
+          ) as nested_photo
+        )
+      from answers
+      where answers.question_id = $1 and answers.reported = false
+      ) as nested_answer
+    limit $2`, [params.question_id, params.count])
       .then((result) => {
         callback(null, result.rows[0]);
-        })
+      })
       .catch((err) => {
         callback(err, null);
       });
@@ -111,7 +113,7 @@ module.exports = {
       ])
       .then((result) => {
         callback(null, result);
-        })
+      })
       .catch((err) => {
         callback(err, null);
       });
@@ -140,7 +142,7 @@ module.exports = {
       ])
       .then((result) => {
         callback(null, result);
-        })
+      })
       .catch((err) => {
         callback(err, null);
       });
@@ -154,7 +156,7 @@ module.exports = {
       [params.question_id])
       .then((result) => {
         callback(null, result);
-        })
+      })
       .catch((err) => {
         callback(err, null);
       });
@@ -168,7 +170,7 @@ module.exports = {
       [params.answer_id])
       .then((result) => {
         callback(null, result);
-        })
+      })
       .catch((err) => {
         callback(err, null);
       });
@@ -182,7 +184,7 @@ module.exports = {
       [params.answer_id])
       .then((result) => {
         callback(null, result);
-        })
+      })
       .catch((err) => {
         callback(err, null);
       });
