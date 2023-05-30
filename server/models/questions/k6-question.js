@@ -3,11 +3,19 @@ import { sleep, check } from 'k6';
 
 export const options = {
   stages: [
-    { duration: '20s', target: 1 },
-    { duration: '30s', target: 50 },
-    { duration: '1m30s', target: 100 },
-    // { duration: '2m0s', target: 100 },
+    // { duration: '15s', target: 1 },
+    // { duration: '30s', target: 50 },
+    // { duration: '30s', target: 100 },
+    // { duration: '1m30s', target: 1000 },
+    // { duration: '1ms', target: 100 },
+    // { duration: '30s', target: 10 },
     // { duration: '2m30s', target: 200 },
+    // { duration: '30s', target: 600 },
+    // { duration: '1m30s', target: 1200 },
+    // { duration: '30s', target: 600 },
+    { duration: '30s', target: 1000 },
+    { duration: '1m30s', target: 1000 },
+    { duration: '30s', target: 1000 },
   ],
 };
 
