@@ -1,14 +1,13 @@
-const { Client } = require('pg');
-const client = new Client({
+const { Pool } = require('pg');
+
+const pool = new Pool({
   user: 'kforeman',
   database: 'questions-answers'
 });
 
-client.connect();
-
 module.exports = {
   getQuestionsDB(params, callback) {
-    client.query(
+    pool.query(
       `select coalesce(json_agg(question), '{}'::json) as results
       from (
         select
@@ -49,6 +48,7 @@ module.exports = {
       limit $2;`,
       [params.product_id, params.count])
       .then((result) => {
+        pool.end;
         callback(null, result.rows[0]);
       })
       .catch((err) => {
@@ -56,7 +56,7 @@ module.exports = {
       });
   },
   getAnswersDB(params, callback) {
-    client.query(
+    pool.query(
     `select coalesce(json_object_agg(nested_answer.id, nested_answer), '{}'::json)
       from
       (
@@ -83,6 +83,7 @@ module.exports = {
       ) as nested_answer
     limit $2`, [params.question_id, params.count])
       .then((result) => {
+        pool.end;
         callback(null, result.rows[0]);
       })
       .catch((err) => {
@@ -90,7 +91,7 @@ module.exports = {
       });
   },
   addQuestionDB(params, callback) {
-    client.query(
+    pool.query(
       `insert into questions(
         question_id,
         product_id,
@@ -112,6 +113,7 @@ module.exports = {
         0
       ])
       .then((result) => {
+        pool.end;
         callback(null, result);
       })
       .catch((err) => {
@@ -119,7 +121,7 @@ module.exports = {
       });
   },
   addAnswerDB(params, callback) {
-    client.query(
+    pool.query(
       `insert into answers(
         answerer_id,
         question_id,
@@ -141,6 +143,7 @@ module.exports = {
         0
       ])
       .then((result) => {
+        pool.end;
         callback(null, result);
       })
       .catch((err) => {
@@ -148,13 +151,14 @@ module.exports = {
       });
   },
   markHelpfulQuestionDB(params, callback) {
-    client.query(
+    pool.query(
       `update questions
         set helpfulness = helpfulness + 1
       where questions.question_id = $1;
       `,
       [params.question_id])
       .then((result) => {
+        pool.end;
         callback(null, result);
       })
       .catch((err) => {
@@ -162,13 +166,14 @@ module.exports = {
       });
   },
   markHelpfulAnswerDB(params, callback) {
-    client.query(
+    pool.query(
       `update answers
         set helpfulness = helpfulness + 1
       where answers.answerer_id = $1;
       `,
       [params.answer_id])
       .then((result) => {
+        pool.end;
         callback(null, result);
       })
       .catch((err) => {
@@ -176,13 +181,14 @@ module.exports = {
       });
   },
   reportAnswerDB(params, callback) {
-    client.query(
+    pool.query(
       `update answers
         set reported = true
       where answers.answerer_id = $1;
       `,
       [params.answer_id])
       .then((result) => {
+        pool.end;
         callback(null, result);
       })
       .catch((err) => {

@@ -56,3 +56,7 @@ CREATE TABLE IF NOT EXISTS photos (
 -- select setval('questions_question_id_seq',  (SELECT count(*) FROM questions));
 -- select setval('answers_answerer_id_seq',  (SELECT count(*) FROM answers));
 -- select setval('photos_photo_id_seq',  (SELECT count(*) FROM photos));
+
+-- create index questions_product_id on questions(product_id);
+-- create index answers_question_id on answers(question_id);
+-- create index photos_answerer_id on photos(answerer_id);
