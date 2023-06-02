@@ -1,4 +1,4 @@
-require('./newrelic');
+require('newrelic');
 /* eslint-disable no-console */
 require('dotenv').config();
 const morgan = require('morgan');
