@@ -1,3 +1,4 @@
+require('newrelic');
 /* eslint-disable no-console */
 require('dotenv').config();
 const morgan = require('morgan');
@@ -38,9 +39,9 @@ app.post('/qa/questions/:question_id/answers', controller.addAnswer);
 app.put('/qa/questions/:question_id/helpful', controller.markHelpfulQuestion);
 app.put('/qa/answers/:answer_id/helpful', controller.markHelpfulAnswer);
 app.put('/qa/answers/:answer_id/report', controller.reportAnswer);
-app.get('/loaderio-178278af0d1a021562cddb43af34b3de', (req, res) => {
-  res.send('loaderio-178278af0d1a021562cddb43af34b3de');
-});
+// app.get('/loaderio-178278af0d1a021562cddb43af34b3de', (req, res) => {
+//   res.send('loaderio-178278af0d1a021562cddb43af34b3de');
+// });
 //
 
 /* ---------------- Server listens ---------------- */
